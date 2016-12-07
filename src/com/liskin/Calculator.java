@@ -7,7 +7,7 @@ import java.util.StringTokenizer;
 
 public class Calculator {
 
-	public static final Map<String, Integer> PRIORITY;
+	private static final Map<String, Integer> PRIORITY;
 	static {
 		PRIORITY = new HashMap<String, Integer>();
 		PRIORITY.put("*", 1);
@@ -16,7 +16,7 @@ public class Calculator {
 		PRIORITY.put("-", 0);
 	}
 
-	public static String sortingStation(String expression, Map<String, Integer> operations1) {
+	private static String sortingStation(String expression) {
 		String rpn = "";
 		StringTokenizer exprMod = new StringTokenizer(expression, " ");
 		Stack<String> operations = new Stack<>();
@@ -43,17 +43,17 @@ public class Calculator {
 		return rpn;
 	}
 
-	public static Integer calculateExpression(String expression) {
-		String rpn = Calculator.sortingStation(expression, PRIORITY);
-		Stack<Integer> operands = new Stack<>();
+	public static Double calculateExpression(String expression) {
+		String rpn = Calculator.sortingStation(expression);
+		Stack<Double> operands = new Stack<>();
 		StringTokenizer rpnMod = new StringTokenizer(rpn, " ");
 		while (rpnMod.hasMoreTokens()) {
 			String token = rpnMod.nextToken();
 			if (!PRIORITY.keySet().contains(token))
-				operands.push(new Integer(token));
+				operands.push(new Double(token));
 			else {
-				Integer op2 = operands.pop();
-				Integer op1 = operands.pop();
+				Double op2 = operands.pop();
+				Double op1 = operands.pop();
 				if (token.equals("+"))
 					operands.push(op1 + op2);
 				if (token.equals("-"))
