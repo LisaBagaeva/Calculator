@@ -43,7 +43,7 @@ public class Calculator {
 		return rpn;
 	}
 
-	public static Double calculateExpression(String expression) {
+	public static Double calculateExpression(String expression){
 		String rpn = Calculator.sortingStation(expression);
 		Stack<Double> operands = new Stack<>();
 		StringTokenizer rpnMod = new StringTokenizer(rpn, " ");
@@ -62,6 +62,7 @@ public class Calculator {
 					operands.push(op1 * op2);
 				if (token.equals("/"))
 					operands.push(op1 / op2);
+			//	throw new Exception("Illegal operator: " + token);
 			}
 		}
 
