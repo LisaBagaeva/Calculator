@@ -17,28 +17,45 @@ public class Calculator {
 	}
 
 	private static String sortingStation(String expression) {
+        int countBrackets =0;
+    	boolean operationsIsExist = false;
 		String rpn = "";
-		StringTokenizer exprMod = new StringTokenizer(expression, " ");
+		StringTokenizer exprMod = new StringTokenizer(expression, " (+/*-)", true);
 		Stack<String> operations = new Stack<>();
 		while (exprMod.hasMoreTokens()) {
 			String token = exprMod.nextToken();
-			if (token.equals("("))
+			if (token.equals("(")){
 				operations.push(token);
+				countBrackets++;
+			}
 			else if (token.equals(")")) {
+				countBrackets--;
 				while (!operations.peek().equals("("))
 					rpn = rpn.concat(operations.pop() + " ");
 				operations.pop();
 			} else if (PRIORITY.keySet().contains(token)) {
+				operationsIsExist = true;
 				if (!operations.empty() && !operations.peek().equals("("))
 					if (PRIORITY.get(token) <= PRIORITY.get(operations.peek())) 
 						rpn = rpn.concat(operations.pop() + " ");
 	
 				operations.push(token);
-			} else
-				rpn = rpn.concat(token + " ");
+			} 
+			else {
+		      //  if(token.matches("//D"))
+			   // throw new IllegalArgumentException("Illegal expression: " + expression);
+				 rpn = rpn.concat(token + " ");
+				
+			}
 		}
 		while (!operations.empty())
 			rpn = rpn.concat(operations.pop() + " ");
+		
+		if(countBrackets !=0)
+		throw new IllegalArgumentException("Illegal expression: " + expression);
+		
+		if(!operationsIsExist)
+			throw new IllegalArgumentException("Illegal expression: " + expression);
 
 		return rpn;
 	}
@@ -46,11 +63,13 @@ public class Calculator {
 	public static Double calculateExpression(String expression){
 		String rpn = Calculator.sortingStation(expression);
 		Stack<Double> operands = new Stack<>();
-		StringTokenizer rpnMod = new StringTokenizer(rpn, " ");
+		StringTokenizer rpnMod = new StringTokenizer(rpn, " (+/*-)", true);
 		while (rpnMod.hasMoreTokens()) {
 			String token = rpnMod.nextToken();
-			if (!PRIORITY.keySet().contains(token))
+			if(!token.equals(" ")){
+			if (!PRIORITY.keySet().contains(token)){
 				operands.push(new Double(token));
+			}
 			else {
 				Double op2 = operands.pop();
 				Double op1 = operands.pop();
@@ -60,13 +79,14 @@ public class Calculator {
 					operands.push(op1 - op2);
 				if (token.equals("*"))
 					operands.push(op1 * op2);
-				if (token.equals("/"))
+				 if (token.equals("/"))
 					operands.push(op1 / op2);
-			//	throw new Exception("Illegal operator: " + token);
+			
 			}
 		}
-
-		return operands.peek();
+		}
+		
+		return  operands.peek();
 	}
 
 }
