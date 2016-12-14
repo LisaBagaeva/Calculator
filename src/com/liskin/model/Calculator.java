@@ -36,17 +36,17 @@ public class Calculator {
 
 			else if (token.equals(")")) {
 				if (operations.isEmpty() || operations.peek().equals("(")) // check ()
-					throw new IllegalArgumentException("Illegal expression: " + expression);
+					throw new IllegalArgumentException("Illegal expression: Empty brackets: " + expression);
 				while (!operations.peek().equals("(")){
 					rpn = rpn.concat(operations.pop() + " ");
-					if(operations.empty()) //check close-bracket
-						throw new IllegalArgumentException("Illegal expression: " + expression);
+					if(operations.empty()) //check open-bracket
+						throw new IllegalArgumentException("Illegal expression: Missing the open-bracket: " + expression);
 				}
 				operations.pop();
 			}
 
 			else if (!(token.matches("^[+-/*]$") || token.matches("^[0-9]+$"))) { // check incorrect symbol
-				throw new IllegalArgumentException("Illegal expression: " + expression);
+				throw new IllegalArgumentException("Illegal expression: Invalid symbol: " + expression);
 			}
 
 			else if (PRIORITY.keySet().contains(token)) {
@@ -60,8 +60,8 @@ public class Calculator {
 			}
 		}
 		while (!operations.empty()) {
-			if (operations.contains("(")) // check open-bracket
-				throw new IllegalArgumentException("Illegal expression: " + expression); 
+			if (operations.contains("(")) // check close-bracket
+				throw new IllegalArgumentException("Illegal expression: Illegal expression: Missing the close-bracket: " + expression); 
 			rpn = rpn.concat(operations.pop() + " ");
 		}
 	

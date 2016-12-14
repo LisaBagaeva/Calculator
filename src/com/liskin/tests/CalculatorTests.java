@@ -11,18 +11,18 @@ public class CalculatorTests {
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testDoubleOperator() {
-	String expression = new String("5**");
-	Calculator.calculateExpression(expression);
-	}
-	
-	@Test(expected = IllegalArgumentException.class)
-	public void testOpenBracket() {
-	String expression = new String("(5+3+2*2");
+	String expression = new String("5*5+4(5**2)");
 	Calculator.calculateExpression(expression);
 	}
 	
 	@Test(expected = IllegalArgumentException.class)
 	public void testCloseBracket() {
+	String expression = new String("(5+3+2*2");
+	Calculator.calculateExpression(expression);
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void testOpenBracket() {
 	String expression = new String("5+3+2*2)");
 	Calculator.calculateExpression(expression);
 	}
