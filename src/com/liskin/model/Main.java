@@ -11,16 +11,13 @@ public class Main {
 		File file = new File("Expressions.txt");
 		try (BufferedReader br = new BufferedReader(new FileReader(file))) {
 			String expression = "";
-
-			while ((expression = br.readLine()) != null) {
-				System.out.println(expression + " = " + Calculator.calculateExpression(expression));
-
-			}
+			while ((expression = br.readLine()) != null) 
+				System.out.println(expression + " = " + Calculator.calculateExpression(expression));	
+			if(expression == null)
+				throw new IllegalArgumentException("Illegal expression: Expression is NULL");
 		} catch (IOException ex) {
 			System.out.println(ex.getMessage());
 		}
-//		String expression ="1+(+";
-//		if (expression.matches("^.*[0-9]+[ )(]+[0-9].*$"))
-//			System.out.println("dfdf");
+		
 	}
 }

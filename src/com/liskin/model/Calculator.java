@@ -23,7 +23,7 @@ public class Calculator {
 
 	private static String sortingStation(String expression) {
 		String rpn = new String("");
-		if (expression.matches("^.*[+-/*][+-/*].*$") || expression.matches("^.*[0-9]+[ )(]+[0-9].*$") ||  expression.matches("^[ ]$")) // Check 5**
+		if (expression.matches("^.*[+-/*][+-/*].*$") || expression.matches("^.*[0-9]+[ )(]+[0-9].*$") ||  expression.matches("^[ ]$") || expression.matches("^$")) // Check 5**
 			throw new IllegalArgumentException("Illegal expression: " + expression);
 		
 		StringTokenizer exprMod = new StringTokenizer(expression, " (+/*-)", true);
