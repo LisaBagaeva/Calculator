@@ -19,5 +19,8 @@ public class Main {
 		} catch (IOException ex) {
 			System.out.println(ex.getMessage());
 		}
+//		String expression ="1+(+";
+//		if (expression.matches("^.*[0-9]+[ )(]+[0-9].*$"))
+//			System.out.println("dfdf");
 	}
 }
