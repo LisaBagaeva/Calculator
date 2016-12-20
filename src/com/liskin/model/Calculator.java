@@ -7,12 +7,12 @@ import java.util.StringTokenizer;
 
 public class Calculator {
 	private static final Map<String, Integer> PRIORITY;
-    private static final Integer MIN_OPERANDS;
-    
-    static
-    {
-    	MIN_OPERANDS = 2;
-    }
+	private static final Integer MIN_OPERANDS;
+
+	static {
+		MIN_OPERANDS = 2;
+	}
+
 	static {
 		PRIORITY = new HashMap<String, Integer>();
 		PRIORITY.put("*", 1);
@@ -23,9 +23,11 @@ public class Calculator {
 
 	private static String sortingStation(String expression) {
 		String rpn = new String("");
-		if (expression.matches("^.*[+-/*][+-/*].*$") || expression.matches("^.*[0-9]+[ )(]+[0-9].*$") ||  expression.matches("^[ ]$") || expression.matches("^$")) // Check 5**
+		if (expression.matches("^.*[+-/*][+-/*].*$") || expression.matches("^.*[0-9]+[ )(]+[0-9].*$")
+				|| expression.matches("^[ ]$") || expression.matches("^$")) // Check
+																			// 5**
 			throw new IllegalArgumentException("Illegal expression: " + expression);
-		
+
 		StringTokenizer exprMod = new StringTokenizer(expression, " (+/*-)", true);
 		Stack<String> operations = new Stack<>();
 		while (exprMod.hasMoreTokens()) {
@@ -36,36 +38,42 @@ public class Calculator {
 				operations.push(token);
 
 			else if (token.equals(")")) {
-				if (operations.isEmpty() || operations.peek().equals("(")) // check ()
+				if (operations.isEmpty() || operations.peek().equals("(")) // check
+																			// //
+																			// ()
 					throw new IllegalArgumentException("Illegal expression: Empty brackets: " + expression);
-				while (!operations.peek().equals("(")){
+
+				while (!operations.peek().equals("(")) {
 					rpn = rpn.concat(operations.pop() + " ");
-					if(operations.empty()) //check open-bracket
-						throw new IllegalArgumentException("Illegal expression: Missing the open-bracket: " + expression);
+					if (operations.empty()) // check open-bracket
+						throw new IllegalArgumentException(
+								"Illegal expression: Missing the open-bracket: " + expression);
 				}
 				operations.pop();
 			}
 
-			else if (!(token.matches("^[+-/*]$") || token.matches("^[0-9]+$"))) { // check incorrect symbol
+			else if (!(token.matches("^[+-/*]$") || token.matches("^[0-9]+$"))) { // check
+																					// incorrect
+																					// symbol
 				throw new IllegalArgumentException("Illegal expression: Invalid symbol: " + expression);
 			}
 
 			else if (PRIORITY.keySet().contains(token)) {
 				if (!operations.empty() && !operations.peek().equals("("))
-					if (PRIORITY.get(token) <= PRIORITY.get(operations.peek()))
+					while (operations.size() != 0 && !operations.peek().equals("(")
+							&& PRIORITY.get(token) <= PRIORITY.get(operations.peek())) {
 						rpn = rpn.concat(operations.pop() + " ");
+					}
 				operations.push(token);
 
-			} else {
+			} else
 				rpn = rpn.concat(token + " ");
-			}
 		}
 		while (!operations.empty()) {
 			if (operations.contains("(")) // check close-bracket
-				throw new IllegalArgumentException("Illegal expression: Illegal expression: Missing the close-bracket: " + expression); 
+				throw new IllegalArgumentException("Illegal expression: Missing the close-bracket: " + expression);
 			rpn = rpn.concat(operations.pop() + " ");
 		}
-	
 		return rpn;
 	}
 
@@ -75,12 +83,14 @@ public class Calculator {
 		StringTokenizer rpnMod = new StringTokenizer(rpn, " (+/*-)", true);
 		while (rpnMod.hasMoreTokens()) {
 			String token = rpnMod.nextToken();
+			System.out.println(token);
 			if (!token.equals(" ")) {
 				if (!PRIORITY.keySet().contains(token)) {
 					operands.push(new Double(token));
 				} else {
-					if(operands.size()<MIN_OPERANDS) //check 5* and 5+5+
-						throw new IllegalArgumentException("Illegal expression: " + expression); // check 5*
+					if (operands.size() < MIN_OPERANDS) // check 5* and 5+5+
+						throw new IllegalArgumentException("Illegal expression: " + expression); // check
+																									// 5*
 					Double op2 = operands.pop();
 					Double op1 = operands.pop();
 					if (token.equals("+"))
@@ -95,7 +105,6 @@ public class Calculator {
 				}
 			}
 		}
-		System.out.println(operands.size());
 		return operands.peek();
 	}
 }

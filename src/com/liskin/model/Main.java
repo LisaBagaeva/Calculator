@@ -1,23 +1,41 @@
 package com.liskin.model;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 
 public class Main {
 
-	public static void main(String[] args) {
-		File file = new File("Expressions.txt");
-		try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+	public static void main(String[] args) throws IOException {
+		File fileIn = new File("Expressions.txt");
+		File fileOut = new File("Results.txt");
+		BufferedWriter wr = new BufferedWriter(new FileWriter(fileOut));
+		int index = 0;
+		try (BufferedReader br = new BufferedReader(new FileReader(fileIn))) {
 			String expression = "";
-			while ((expression = br.readLine()) != null) 
-				System.out.println(expression + " = " + Calculator.calculateExpression(expression));	
-			if(expression == null)
-				throw new IllegalArgumentException("Illegal expression: Expression is NULL");
+			while ((expression = br.readLine()) != null) {
+				try {
+					wr.write(index + ") " + expression + " = " + Calculator.calculateExpression(expression) + "\r\n");
+					index++;
+
+				} catch (IOException ex) {
+					System.out.println(ex.getMessage());
+				}
+
+				catch (IllegalArgumentException ex) {
+					wr.write(index + ") " + ex.getMessage() + "\r\n");
+					index++;
+				}
+			}
+			if (index == 0)
+				throw new IllegalArgumentException("Illegal expression: expression is NULL");
+			wr.close();
 		} catch (IOException ex) {
 			System.out.println(ex.getMessage());
 		}
-		
+
 	}
 }
