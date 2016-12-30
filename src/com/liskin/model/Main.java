@@ -10,6 +10,7 @@ import java.io.IOException;
 public class Main {
 
 	public static void main(String[] args) throws IOException {
+
 		File fileIn = new File("Expressions.txt");
 		File fileOut = new File("Results.txt");
 		BufferedWriter wr = new BufferedWriter(new FileWriter(fileOut));
@@ -20,12 +21,15 @@ public class Main {
 				try {
 					wr.write(index + ") " + expression + " = " + Calculator.calculateExpression(expression) + "\r\n");
 					index++;
+					System.out.println(Calculator.calculateExpression(expression));
 
 				} catch (IOException ex) {
+					System.out.println(Calculator.calculateExpression(expression));
 					System.out.println(ex.getMessage());
 				}
 
 				catch (IllegalArgumentException ex) {
+					System.out.println(Calculator.calculateExpression(expression));
 					wr.write(index + ") " + ex.getMessage() + "\r\n");
 					index++;
 				}

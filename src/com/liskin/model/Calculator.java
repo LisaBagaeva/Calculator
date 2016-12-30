@@ -1,31 +1,21 @@
 package com.liskin.model;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Stack;
 import java.util.StringTokenizer;
 
 public class Calculator {
-	private static final Map<String, Integer> PRIORITY;
 	private static final Integer MIN_OPERANDS;
 
 	static {
 		MIN_OPERANDS = 2;
 	}
 
-	static {
-		PRIORITY = new HashMap<String, Integer>();
-		PRIORITY.put("*", 1);
-		PRIORITY.put("/", 1);
-		PRIORITY.put("+", 0);
-		PRIORITY.put("-", 0);
-	}
-
 	private static String sortingStation(String expression) {
 		String rpn = new String("");
 		if (expression.matches("^.*[+-/*][+-/*].*$") || expression.matches("^.*[0-9]+[ )(]+[0-9].*$")
-				|| expression.matches("^[ ]$") || expression.matches("^$")) // Check
-																			// 5**
+				|| expression.matches("^.*[0-9]+[ (]+[/*+-]+.*$") || expression.matches("^[ ]$")
+				|| expression.matches("^$")) // Check
+			// 5**
 			throw new IllegalArgumentException("Illegal expression: " + expression);
 
 		StringTokenizer exprMod = new StringTokenizer(expression, " (+/*-)", true);
@@ -38,9 +28,9 @@ public class Calculator {
 				operations.push(token);
 
 			else if (token.equals(")")) {
-				if (operations.isEmpty() || operations.peek().equals("(")) // check
-																			// //
-																			// ()
+				if (operations.peek().equals("(") && rpn.isEmpty()) // check
+					// //
+					// ()
 					throw new IllegalArgumentException("Illegal expression: Empty brackets: " + expression);
 
 				while (!operations.peek().equals("(")) {
@@ -58,10 +48,11 @@ public class Calculator {
 				throw new IllegalArgumentException("Illegal expression: Invalid symbol: " + expression);
 			}
 
-			else if (PRIORITY.keySet().contains(token)) {
+			else if (Operations.contains(token.toCharArray()[0])) {
 				if (!operations.empty() && !operations.peek().equals("("))
 					while (operations.size() != 0 && !operations.peek().equals("(")
-							&& PRIORITY.get(token) <= PRIORITY.get(operations.peek())) {
+							&& Operations.getOperation(token.toCharArray()[0]).getPrioroty() <= Operations
+									.getOperation(operations.peek().toCharArray()[0]).getPrioroty()) {
 						rpn = rpn.concat(operations.pop() + " ");
 					}
 				operations.push(token);
@@ -83,9 +74,8 @@ public class Calculator {
 		StringTokenizer rpnMod = new StringTokenizer(rpn, " (+/*-)", true);
 		while (rpnMod.hasMoreTokens()) {
 			String token = rpnMod.nextToken();
-			System.out.println(token);
 			if (!token.equals(" ")) {
-				if (!PRIORITY.keySet().contains(token)) {
+				if (!Operations.contains(token.toCharArray()[0])) {
 					operands.push(new Double(token));
 				} else {
 					if (operands.size() < MIN_OPERANDS) // check 5* and 5+5+
@@ -93,15 +83,23 @@ public class Calculator {
 																									// 5*
 					Double op2 = operands.pop();
 					Double op1 = operands.pop();
-					if (token.equals("+"))
-						operands.push(op1 + op2);
-					if (token.equals("-"))
-						operands.push(op1 - op2);
-					if (token.equals("*"))
-						operands.push(op1 * op2);
-					if (token.equals("/"))
-						operands.push(op1 / op2);
 
+					switch (token) {
+					case "+":
+						operands.push(Operations.ADDITION.calculate(op1, op2));
+						break;
+
+					case "-":
+						operands.push(Operations.SUBSTRUCTION.calculate(op1, op2));
+						break;
+					case "*":
+						operands.push(Operations.MULTIPLICATION.calculate(op1, op2));
+						break;
+
+					case "/":
+						operands.push(Operations.DIVISION.calculate(op1, op2));
+						break;
+					}
 				}
 			}
 		}

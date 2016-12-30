@@ -2,3 +2,5 @@ bin/
 .settings/
 .classpath
 .project
+src/com/liskin/model/Foo.java
+src/com/liskin/model/Season.java
